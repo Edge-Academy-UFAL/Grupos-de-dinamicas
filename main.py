@@ -1,19 +1,21 @@
 import json
-import itertools
-from itertools import combinations
+
 
 class Aluno:
     def __init__(self, nome, dias):
         self.nome = nome
         self.dias = dias
+
+
 class AlunoNaoIT(Aluno):
     def __init__(self, nome, dias):
         super().__init__(nome, dias)
         self.Turmas2H = {}
         self.Turmas3H = {}
-        self.Comb = {}
+        self.Comb = {
+            "Segunda": {},"Terca": {}, "Quarta": {}, "Quinta": {}, "Sexta": {},
+            }
 
-# Função para criar um grafo a partir da lista de alunos
 
 def transform_value(value):
     if value == "":
@@ -21,14 +23,17 @@ def transform_value(value):
     elif value == "X":
         return "0"
 
+
 def transform_list(lst):
     return [transform_value(item) for item in lst]
+
 
 def find_student_by_name(name, alunos):
     for i, aluno in enumerate(alunos):
         if aluno.nome == name:
             return alunos.pop(i)
     return None
+
 
 def generate_combinations(dias, interval_hours):
     combinations = []
@@ -45,10 +50,11 @@ def generate_combinations(dias, interval_hours):
 
     return combinations
 
+
 with open(r'C:\Users\range\Downloads\dados.json', "r") as json_file:
     data = json.load(json_file)
 
-diasSemana=["Segunda","Terca","Quarta","Quinta","Sexta"]
+diasSemana=["Segunda", "Terca", "Quarta", "Quinta", "Sexta"]
 alunos = []
 it_aluno = Aluno("nome", [])
 
@@ -62,7 +68,7 @@ for aluno_json in data:
         "Quinta": transform_list(dias_json["Quinta"]),
         "Sexta": transform_list(dias_json["Sexta"])
     }
-    if(nome != "IT"):
+    if nome != "IT":
         aluno = AlunoNaoIT(nome, dias)
         alunos.append(aluno)
     else:
@@ -83,9 +89,9 @@ if it_aluno:
         Turmas2HGlobal[dia] = combinations_2h
         Turmas3HGlobal[dia] = combinations_3h
 
-   # print("Turmas2HGlobal:")
+    #print("Turmas2HGlobal:")
     #print(Turmas2HGlobal)
-   # print("Turmas3HGlobal:")
+    #print("Turmas3HGlobal:")
     #print(Turmas3HGlobal)
 else:
     print("Aluno IT não encontrado.")
@@ -140,19 +146,24 @@ if alunoT and alunoX:
         print("Dia da semana não encontrado para um dos alunos.")
 else:
     print("Aluno T ou aluno X não encontrado.")
-# to fazendo uma comparação de 1 pra todos
+
+
 for alunoT in alunos:
     #dia_semana = "Segunda"  # Substitua pelo dia desejado
-    combinacoes_alunoT = set(alunoT.Turmas3H[dia_semana])
     for dia_semana in diasSemana:
+        combinacoes_alunoT = set(alunoT.Turmas3H[dia_semana])
         for alunoX in alunos:
             if alunoX != alunoT and dia_semana in alunoX.Turmas2H:
                 combinacoes_alunoX = set(alunoX.Turmas3H[dia_semana])
 
                 if combinacoes_alunoT.intersection(combinacoes_alunoX):
                     print(f"O aluno {alunoT.nome} tem combinações em comum com o aluno {alunoX.nome} na {dia_semana}.")
-                    print(combinacoes_alunoT.intersection(combinacoes_alunoX))
-                    alunoT.Comb[alunoX.nome] = (combinacoes_alunoT.intersection(combinacoes_alunoX))
+                    #print(combinacoes_alunoT.intersection(combinacoes_alunoX))
+                    alunoT.Comb[dia_semana][alunoX.nome] = (combinacoes_alunoT.intersection(combinacoes_alunoX))
+                    print(f'{alunoT.nome} e {alunoX.nome} : {alunoT.Comb[dia_semana][alunoX.nome]}')
                 else:
                     print(f"O aluno {alunoT.nome} não tem combinações em comum com o aluno {alunoX.nome} na {dia_semana}.")
 
+for aluno in alunos:
+    for dia in diasSemana:
+        print(f'{aluno.nome} in {dia}:{len(aluno.Comb[dia])}')
