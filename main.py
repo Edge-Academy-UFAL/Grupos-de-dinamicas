@@ -3,14 +3,15 @@ import itertools
 from itertools import combinations
 
 class Aluno:
-    def _init_(self, nome, dias):
+    def __init__(self, nome, dias):
         self.nome = nome
         self.dias = dias
 class AlunoNaoIT(Aluno):
-    def _init_(self, nome, dias):
-        super()._init_(nome, dias)
+    def __init__(self, nome, dias):
+        super().__init__(nome, dias)
         self.Turmas2H = {}
         self.Turmas3H = {}
+        self.Comb = {}
 
 # Função para criar um grafo a partir da lista de alunos
 
@@ -44,11 +45,10 @@ def generate_combinations(dias, interval_hours):
 
     return combinations
 
-
-
-with open(r'C:\Users\Rangel\Downloads\dados.json', "r") as json_file:
+with open(r'C:\Users\range\Downloads\dados.json', "r") as json_file:
     data = json.load(json_file)
 
+diasSemana=["Segunda","Terca","Quarta","Quinta","Sexta"]
 alunos = []
 it_aluno = Aluno("nome", [])
 
@@ -141,18 +141,18 @@ if alunoT and alunoX:
 else:
     print("Aluno T ou aluno X não encontrado.")
 # to fazendo uma comparação de 1 pra todos
-if alunoT:
-    dia_semana = "Segunda"  # Substitua pelo dia desejado
+for alunoT in alunos:
+    #dia_semana = "Segunda"  # Substitua pelo dia desejado
     combinacoes_alunoT = set(alunoT.Turmas3H[dia_semana])
+    for dia_semana in diasSemana:
+        for alunoX in alunos:
+            if alunoX != alunoT and dia_semana in alunoX.Turmas2H:
+                combinacoes_alunoX = set(alunoX.Turmas3H[dia_semana])
 
-    for alunoX in alunos:
-        if alunoX != alunoT and dia_semana in alunoX.Turmas2H:
-            combinacoes_alunoX = set(alunoX.Turmas3H[dia_semana])
+                if combinacoes_alunoT.intersection(combinacoes_alunoX):
+                    print(f"O aluno {alunoT.nome} tem combinações em comum com o aluno {alunoX.nome} na {dia_semana}.")
+                    print(combinacoes_alunoT.intersection(combinacoes_alunoX))
+                    alunoT.Comb[alunoX.nome] = (combinacoes_alunoT.intersection(combinacoes_alunoX))
+                else:
+                    print(f"O aluno {alunoT.nome} não tem combinações em comum com o aluno {alunoX.nome} na {dia_semana}.")
 
-            if combinacoes_alunoT.intersection(combinacoes_alunoX):
-                print(f"O aluno {alunoT.nome} tem combinações em comum com o aluno {alunoX.nome} na {dia_semana}.")
-                print(combinacoes_alunoT.intersection(combinacoes_alunoX))
-            else:
-                print(f"O aluno {alunoT.nome} não tem combinações em comum com o aluno {alunoX.nome} na {dia_semana}.")
-else:
-    print("Aluno T não encontrado.")
