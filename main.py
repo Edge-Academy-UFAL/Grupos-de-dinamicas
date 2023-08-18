@@ -168,14 +168,6 @@ for aluno in alunos:
     for dia in diasSemana:
         print(f'{aluno.nome} in {dia}:{len(aluno.Comb[dia])} on : {list(aluno.Comb[dia].keys())}')
 
-def sortedA(alunos, gpTam):
-    if len(alunos) == 0 or gpTam == 7:
-        return
-
-    sorted_alunos = sorted(alunos, key=lambda aluno: sum(len(comb) for dia_comb in aluno.Comb.values() for comb in dia_comb.values()), reverse=True)
-
-
-sortedA(alunos, 0)
 
 """def sortedA(alunos, gpTam):
     if len(alunos) == 0:
