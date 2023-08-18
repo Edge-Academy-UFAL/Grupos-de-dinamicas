@@ -117,7 +117,7 @@ if alunoT:
     print(alunoT.Turmas3H["Segunda"])
 else:
     print("Aluno R não encontrado.")
-
+"""
 alunoX = find_student_by_name("A", alunos)
 
 if alunoX:
@@ -146,7 +146,7 @@ if alunoT and alunoX:
         print("Dia da semana não encontrado para um dos alunos.")
 else:
     print("Aluno T ou aluno X não encontrado.")
-
+"""
 
 for alunoT in alunos:
     #dia_semana = "Segunda"  # Substitua pelo dia desejado
@@ -166,4 +166,30 @@ for alunoT in alunos:
 
 for aluno in alunos:
     for dia in diasSemana:
-        print(f'{aluno.nome} in {dia}:{len(aluno.Comb[dia])}')
+        print(f'{aluno.nome} in {dia}:{len(aluno.Comb[dia])} on : {list(aluno.Comb[dia].keys())}')
+
+def sortedA(alunos, gpTam):
+    if len(alunos) == 0 or gpTam == 7:
+        return
+
+    sorted_alunos = sorted(alunos, key=lambda aluno: sum(len(comb) for dia_comb in aluno.Comb.values() for comb in dia_comb.values()), reverse=True)
+
+
+sortedA(alunos, 0)
+
+"""def sortedA(alunos, gpTam):
+    if len(alunos) == 0:
+        return
+    if gpTam == 7:
+        return
+    for aluno in alunos:
+        for dia in diasSemana:
+            if len(aluno.Comb[dia]) > 0:
+                keys = list(aluno.Comb[dia].keys())
+                #confirmar se tem uma interceção em comum
+
+
+sortedA(alunos,0)"""
+"""alunoX = find_student_by_name("A", alunos)
+e = set(alunoX.Comb["Terca"]['E'])
+print(list(e)[1])"""
